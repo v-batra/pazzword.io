@@ -13,4 +13,4 @@ Client-side password &amp; passphrase generator - secure, quirky &amp; customiza
 - [david47k/top-english-wordlists](https://github.com/david47k/top-english-wordlists)
 
 ## Live Site
-👉 https://your-username.github.io/pazzword
+👉 https://pazzword.io
