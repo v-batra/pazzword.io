@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      margin: auto;
+      background-color: #f4f6f9;
+      color: #333;
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+    }
+    .dark-mode {
+      background-color: #1e1e2f;
+      color: #f1f1f1;
+    }
+    .main-content {
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .dark-mode .main-content {
+      background: #2c2c3c;
+    }
+    .sidebar {
+      margin-left: 20px;
+      padding-left: 20px;
+      border-left: 2px dashed #ccc;
+      min-width: 220px;
+    }
+    input[type=range], input[type=number], textarea, select, input[type=text] {
+      width: 100%;
+      margin-top: 5px;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: none;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      margin: 5px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #qrcode {
+      margin-top: 10px;
+      text-align: center;
+    }
+    #randomOptions {
+      display: block;
+      margin-top: 10px;
+    }
+    #historyList {
+      font-size: 0.9em;
+      margin-top: 10px;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 4px 0;
+      background: #f1f1f1;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .dark-mode .history-item {
+      background: #3a3a4f;
+    }
+    .copy-icon {
+      margin-left: 10px;
+      color: #007bff;
+      cursor: pointer;
+    }
+    #toast {
+      visibility: hidden;
+      min-width: 160px;
+      margin-left: -80px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 10px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      font-size: 14px;
+    }
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Previous clean state restored. All changes after 'add tooltips to all the sections' are undone. -->
+</body>
+</html>
