@@ -5,119 +5,272 @@
   <title>Password Generator</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-      margin: auto;
-      background-color: #f4f6f9;
-      color: #333;
-      transition: background 0.3s, color 0.3s;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
       display: flex;
     }
-    .dark-mode {
-      background-color: #1e1e2f;
-      color: #f1f1f1;
-    }
     .main-content {
-      max-width: 600px;
-      width: 100%;
-      background: #fff;
-      border-radius: 10px;
+      flex: 1;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .dark-mode .main-content {
-      background: #2c2c3c;
+      max-width: 700px;
     }
     .sidebar {
-      margin-left: 20px;
-      padding-left: 20px;
-      border-left: 2px dashed #ccc;
-      min-width: 220px;
+      width: 250px;
+      background: #ffffff;
+      border-left: 1px solid #ddd;
+      padding: 20px;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
     }
-    input[type=range], input[type=number], textarea, select, input[type=text] {
+    h2 {
+      color: #343a40;
+    }
+    label {
+      display: block;
+      margin: 8px 0;
+    }
+    input[type="text"], input[type="number"] {
       width: 100%;
-      margin-top: 5px;
-      padding: 5px;
-      border-radius: 4px;
+      padding: 8px;
+      margin: 4px 0 10px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    textarea {
-      resize: none;
+      border-radius: 4px;
     }
     button {
-      background: #007bff;
-      color: white;
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #007bff;
+      color: #fff;
       border: none;
-      padding: 10px 16px;
-      margin: 5px 0;
       border-radius: 4px;
       cursor: pointer;
-      transition: background 0.2s ease;
     }
     button:hover {
-      background: #0056b3;
+      background-color: #0056b3;
     }
-    #qrcode {
+    input#password {
+      width: 100%;
       margin-top: 10px;
-      text-align: center;
-    }
-    #randomOptions {
-      display: block;
-      margin-top: 10px;
-    }
-    #historyList {
-      font-size: 0.9em;
-      margin-top: 10px;
+      padding: 10px;
+      font-size: 1.2em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
     }
     .history-item {
+      margin-bottom: 10px;
+      padding: 5px;
+      border-bottom: 1px solid #eee;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 4px 0;
-      background: #f1f1f1;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .dark-mode .history-item {
-      background: #3a3a4f;
     }
     .copy-icon {
-      margin-left: 10px;
-      color: #007bff;
       cursor: pointer;
+      color: #007bff;
+      font-weight: bold;
     }
     #toast {
       visibility: hidden;
-      min-width: 160px;
-      margin-left: -80px;
+      min-width: 250px;
+      margin-left: -125px;
       background-color: #333;
       color: #fff;
       text-align: center;
       border-radius: 4px;
-      padding: 10px;
+      padding: 12px;
       position: fixed;
       z-index: 1;
       left: 50%;
       bottom: 30px;
-      font-size: 14px;
+      font-size: 17px;
     }
     #toast.show {
       visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
       animation: fadein 0.5s, fadeout 0.5s 2.5s;
     }
     @keyframes fadein {
-      from {bottom: 0; opacity: 0;}
-      to {bottom: 30px; opacity: 1;}
+      from { bottom: 0; opacity: 0; }
+      to { bottom: 30px; opacity: 1; }
     }
     @keyframes fadeout {
-      from {bottom: 30px; opacity: 1;}
-      to {bottom: 0; opacity: 0;}
+      from { bottom: 30px; opacity: 1; }
+      to { bottom: 0; opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <!-- Previous clean state restored. All changes after 'add tooltips to all the sections' are undone. -->
+  <div class="main-content">
+    <h2>Password Generator</h2>
+    <label><input type="radio" name="mode" value="random" checked onchange="toggleMode()"> Random Password</label>
+    <label><input type="radio" name="mode" value="passphrase" onchange="toggleMode()"> Passphrase</label>
+
+    <div id="randomOptions">
+      <label><input type="checkbox" id="includeUpper" checked> Include Uppercase</label>
+      <label><input type="checkbox" id="includeLower" checked> Include Lowercase</label>
+      <label><input type="checkbox" id="includeNumbers" checked> Include Numbers</label>
+      <label><input type="checkbox" id="includeSymbols" checked> Include Symbols</label>
+      <label><input type="checkbox" id="avoidSimilar"> Avoid Similar Characters</label>
+      <label><input type="checkbox" id="excludeUnsafe"> Exclude Unsafe Symbols</label>
+      <label for="customChars">Custom Allowed Characters (overrides options above): </label>
+      <input type="text" id="customChars" placeholder="e.g. abc123!@#">
+      <label>Password Length:</label>
+      <input type="number" id="randomLength" value="16" min="4" max="256">
+    </div>
+
+    <div id="passphraseOptions" style="display:none;">
+      <label for="wordCount">Word Count:</label>
+      <input type="number" id="wordCount" value="4" min="4" max="4" readonly>
+      <label for="separator">Separator:</label>
+      <input type="text" id="separator" value="-">
+    </div>
+
+    <input id="password" type="text" readonly />
+    <button onclick="generatePassword()">Generate</button>
+    <button onclick="copyPassword()">Copy</button>
+    <div id="qrcode"></div>
+  </div>
+
+  <div class="sidebar">
+    <h3>Recent</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <div id="toast"></div>
+
+  <footer style="position: fixed; bottom: 0; left: 0; width: 100%; background: #f0f0f0; text-align: center; padding: 10px; font-size: 0.9em; border-top: 1px solid #ccc;">
+    <p style="margin: 5px 0;">Powered by <strong>pazzword.io</strong> 🔐 | Wordlists courtesy of <a href="https://github.com/david47k/top-english-wordlists" target="_blank">david47k/top-english-wordlists</a></p>
+  </footer>
+
+  <script>
+    const recent = [];
+
+    async function fetchWordList(url) {
+      const res = await fetch(url);
+      const text = await res.text();
+      return text.split('\n').map(w => w.trim()).filter(Boolean);
+    }
+
+    let nouns = [], verbs = [], adjs = [], advs = [], prons = [];
+    fetchWordList('https://raw.githubusercontent.com/david47k/top-english-wordlists/refs/heads/master/top_english_nouns_lower_10000.txt').then(data => nouns = data);
+    fetchWordList('https://raw.githubusercontent.com/david47k/top-english-wordlists/refs/heads/master/top_english_verbs_lower_10000.txt').then(data => verbs = data);
+    fetchWordList('https://raw.githubusercontent.com/david47k/top-english-wordlists/refs/heads/master/top_english_adjs_lower_10000.txt').then(data => adjs = data);
+    fetchWordList('https://raw.githubusercontent.com/david47k/top-english-wordlists/refs/heads/master/top_english_advs_lower_10000.txt').then(data => advs = data);
+    fetchWordList('https://raw.githubusercontent.com/david47k/top-english-wordlists/refs/heads/master/top_english_prons_lower_10000.txt').then(data => prons = data);
+
+    function getRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generatePassword() {
+      const mode = document.querySelector('input[name="mode"]:checked').value;
+      const passwordInput = document.getElementById('password');
+      let password = '';
+      if (mode === 'passphrase') {
+        const separator = document.getElementById('separator').value;
+        const structures = [
+          () => [getRandom(adjs), getRandom(nouns), getRandom(verbs), getRandom(nouns)],
+          () => [getRandom(nouns), getRandom(verbs), getRandom(adjs), getRandom(nouns)],
+          () => [getRandom(prons), getRandom(verbs), getRandom(adjs), getRandom(nouns)],
+          () => [getRandom(adjs), getRandom(nouns), getRandom(advs), getRandom(verbs)]
+        ];
+        const structure = getRandom(structures);
+        password = structure().join(separator);
+      } else {
+        const length = parseInt(document.getElementById('randomLength').value);
+        const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lower = 'abcdefghijklmnopqrstuvwxyz';
+        const numbers = '0123456789';
+        const symbols = '!@#$%^&*()_+[]{}|;:,.<>?';
+        const similar = /[ilLIoO0]/g;
+        const unsafe = /[\"'\\]/g;
+        let chars = '';
+        if (document.getElementById('customChars').value.trim()) {
+          chars = document.getElementById('customChars').value;
+        } else {
+          if (document.getElementById('includeUpper').checked) chars += upper;
+          if (document.getElementById('includeLower').checked) chars += lower;
+          if (document.getElementById('includeNumbers').checked) chars += numbers;
+          if (document.getElementById('includeSymbols').checked) chars += symbols;
+          if (document.getElementById('avoidSimilar').checked) chars = chars.replace(similar, '');
+          if (document.getElementById('excludeUnsafe').checked) chars = chars.replace(unsafe, '');
+        }
+        for (let i = 0; i < length; i++) {
+          password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+      }
+      passwordInput.value = password;
+      updateHistory(password);
+    }
+
+    function toggleMode() {
+      const isPassphrase = document.querySelector('input[name="mode"]:checked').value === 'passphrase';
+      document.getElementById('randomOptions').style.display = isPassphrase ? 'none' : 'block';
+      document.getElementById('passphraseOptions').style.display = isPassphrase ? 'block' : 'none';
+    }
+
+    function copyPassword() {
+      const password = document.getElementById('password').value;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(password).then(() => showToast('Copied!'));
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = password;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showToast('Copied!');
+        } catch (err) {
+          showToast('Copy failed');
+        }
+        document.body.removeChild(textarea);
+      }
+    }
+
+    function updateHistory(p) {
+      recent.unshift(p);
+      if (recent.length > 20) recent.pop();
+      const list = document.getElementById('historyList');
+      list.innerHTML = '';
+      recent.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `<span>${item}</span><span class="copy-icon" onclick="copyText('${item}')">📋</span>`;
+        list.appendChild(div);
+      });
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showToast('Copied!');
+        } catch (err) {
+          showToast('Copy failed');
+        }
+        document.body.removeChild(textarea);
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'show';
+      setTimeout(() => toast.className = toast.className.replace('show', ''), 3000);
+    }
+  </script>
 </body>
 </html>
